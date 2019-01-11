@@ -50,7 +50,7 @@ class Usuario {
 	}
 
 
-	//Funçao para receber chave primaria id
+	//Funçao para receber chave primaria id, recebe o usuario deste Id
 	public function loadById($id){
 
 		$sql = new Sql();
@@ -73,15 +73,61 @@ class Usuario {
 	}
 
 
+	//Funcao para mostrar uma lista de usuarios
+	public static function getList(){
+
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin;");
+}
+
+	//Funcao para buscar um usuario
+	public static function search($login){
+
+		$sql = new Sql();
+
+		return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(':SEARCH'=>"%" .$login. "%"
+		));
+	}
+
+
+
+	//metodo para validar login e senha do usuario
+	public function login($login, $password){
+
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array( ":LOGIN"=>$login, ":PASSWORD"=>$password
+	));
+	
+		//Logica para validar se existe códigos ids no banco de dados, verifica a posicao no array
+		if (count($results) > 0) {
+
+			$row = $results[0];
+
+			$this->setIdusuario($row['idusuario']);
+			$this->setDeslogin($row['deslogin']);
+			$this->setDessenha($row['dessenha']);
+			$this->setDtcadastro(new Datetime($row['dtcadastro']));
+		}
+		else{
+
+			throw new Exception("Login e/ou senha inválidos.");
+			
+		}
+
+	}
+
+
 
 // metodo magico: __toString = converte informacoes de dentro de um objeto para string
-public function __toString(){
+	public function __toString(){
 
-	return json_encode(array(
-		"idusuario"=>$this->getIdusuario(),
-		"deslogin"=>$this->getDeslogin(),
-		"dessenha"=>$this->getDessenha(),
-		"dtcadastro"=>$this->getDtcadastro()->format("d/m/Y H:i:s")
+		return json_encode(array(
+			"idusuario"=>$this->getIdusuario(),
+			"deslogin"=>$this->getDeslogin(),
+			"dessenha"=>$this->getDessenha(),
+			"dtcadastro"=>$this->getDtcadastro()	->format("d/m/Y H:i:s")
 	));
 }
 

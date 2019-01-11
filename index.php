@@ -11,10 +11,28 @@ require_once("config.php");
 //encapsulamento, dentro do json encode vc encontra todas informaçoes passadas anteriormentes em $usuarios
 //echo json_encode($usuarios);
 
-$root = new Usuario();
 
-$root->loadbyId(1);
 
-echo $root;
+//Carrega um usuario
+//$root = new Usuario();
+//$root->loadbyId(1);
+//echo $root;
+
+
+
+//$lista = Usuario::getList();
+//echo json_encode($lista);
+
+
+//Carrega uma lista de usuarios buscando pelo login
+//$search = Usuario::search("d");
+//echo json_encode($search);
+
+
+//Carrega usuario usando o login e a senha
+$usuario = new Usuario();
+$usuario->login("root","123");
+echo $usuario;
+
 
 ?>
