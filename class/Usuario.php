@@ -2,11 +2,13 @@
 
 class Usuario {
 
+	//Atributos
 	private $idusuario;
 	private $deslogin;
 	private $dessenha;
 	private $dtcadastro;
 
+	//Geters e Seters de cada atributo, define valores e pega os mesmos
 	public function getIdusuario(){
 
 		return $this->idusuario;
@@ -56,6 +58,7 @@ class Usuario {
 		$results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array( ":ID"=>$id
 	));
 	
+		//Logica para validar se existe códigos ids no banco de dados, verifica a posicao no array
 		if (count($results) > 0) {
 
 			$row = $results[0];
@@ -71,7 +74,7 @@ class Usuario {
 
 
 
-
+// metodo magico: __toString = converte informacoes de dentro de um objeto para string
 public function __toString(){
 
 	return json_encode(array(
