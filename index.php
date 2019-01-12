@@ -39,10 +39,18 @@ require_once("config.php");
 //$aluno->insert();
 //echo $aluno;
 
-
-$usuario = new Usuario();
+//Atualiza informações de um usuario
+/*$usuario = new Usuario();
 $usuario->loadById(2);
 $usuario->update("professor", "456789");
 echo $usuario;
+*/
+
+//Deleta um usuario
+$usuario = new Usuario();
+$usuario->loadById(2);
+$usuario->delete();
+echo $usuario;
+
 
 ?>
