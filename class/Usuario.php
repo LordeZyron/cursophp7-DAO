@@ -61,13 +61,8 @@ class Usuario {
 		//Logica para validar se existe códigos ids no banco de dados, verifica a posicao no array
 		if (count($results) > 0) {
 
-			$row = $results[0];
-
-			$this->setIdusuario($row['idusuario']);
-			$this->setDeslogin($row['deslogin']);
-			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro(new Datetime($row['dtcadastro']));
-
+			$this->setData($results[0]);
+		
 		}
 
 	}
@@ -100,15 +95,11 @@ class Usuario {
 		$results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array( ":LOGIN"=>$login, ":PASSWORD"=>$password
 	));
 	
-		//Logica para validar se existe códigos ids no banco de dados, verifica a posicao no array
+		//Chama o metodo setData para verificar se existe ID
 		if (count($results) > 0) {
 
-			$row = $results[0];
-
-			$this->setIdusuario($row['idusuario']);
-			$this->setDeslogin($row['deslogin']);
-			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro(new Datetime($row['dtcadastro']));
+			$this->setData($results[0]);
+			
 		}
 		else{
 
@@ -118,7 +109,40 @@ class Usuario {
 
 	}
 
+	//Logica para validar se existe códigos ids no banco de dados, verifica a posicao no array
+	public function setData($data){
 
+	$this->setIdusuario($data['idusuario']);
+	$this->setDeslogin($data['deslogin']);
+	$this->setDessenha($data['dessenha']);
+	$this->setDtcadastro(new Datetime($data['dtcadastro']));
+
+
+	}
+
+
+	//Função para inserir dados no SQL
+	public function insert(){
+
+		$sql = new Sql();
+
+		$results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+			':LOGIN'=>$this->getDeslogin(),
+			':PASSWORD'=>$this->getDessenha()
+		));
+
+		if (count($results) > 0) {
+			$this->setData($results[0]);
+		}
+	}
+
+
+	//Função para definir parametros de usuario
+	public function __construct($login="", $password=""){
+
+		$this->setDeslogin($login);
+		$this->setDessenha($password);
+	}
 
 // metodo magico: __toString = converte informacoes de dentro de um objeto para string
 	public function __toString(){
@@ -127,7 +151,7 @@ class Usuario {
 			"idusuario"=>$this->getIdusuario(),
 			"deslogin"=>$this->getDeslogin(),
 			"dessenha"=>$this->getDessenha(),
-			"dtcadastro"=>$this->getDtcadastro()	->format("d/m/Y H:i:s")
+			"dtcadastro"=>$this->getDtcadastro()//->format("d/m/Y H:i:s")
 	));
 }
 
